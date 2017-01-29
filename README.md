@@ -1,1 +1,2 @@
-# mastermind
+# Mastermind
+My first project
