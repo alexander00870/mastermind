@@ -1,0 +1,149 @@
+<html>
+	<head>
+		<title>MASTERMIND</title>
+		<style>
+			h1 span {
+				transition: all 2s ease-in-out;
+			}
+			h1 span:hover {
+				color:blue !important;
+			}
+		</style>
+	</head>
+	<body>
+		<!-- h1>MASTERMIND</h1 -->
+		<h1>
+			<span style="color:red;">M</span>
+			<span style="color:green;">A</span>
+			<span style="color:blue;">S</span>
+			<span style="color:brown;">T</span>
+			<span style="color:magenta;">E</span>
+			<span style="color:dimGrey;">R</span>
+			<span style="color:red;">M</span>
+			<span style="color:blue;">I</span>
+			<span style="color:brown;">N</span>
+			<span style="color:green;">D</span>
+		</h1>
+		<div id="playConsole">
+			
+		</div>
+		<div id="playHandle">
+			<label>Bitte vierstellige zahl eingeben: </label>
+			<input id="answer" onkeyup="if(event.keyCode==13){onEnter();return false;}" onkeypress="onKeyPress(event)" />
+			<button id="ok" onclick="onEnter()">OK</button>
+		</div>
+		
+		<script>			
+			var sn;
+			var d=0;
+			onInit();
+			function onInit() {
+				sn=[0,0,0,0];
+				var i=0;
+				while(i<4) {
+                    var duplicateFoundet=false;
+                    sn[i]=Math.floor(Math.random()*9)+1;
+                    var j=0;
+					while(j<i) {
+						if(sn[i]==sn[j]) {
+							duplicateFoundet=true;
+							break;
+						}
+						j++;
+					}
+					if(!duplicateFoundet) {
+						i++;
+					}                                         
+			    }
+				
+				// print(sn);
+			}
+			function onKeyPress(event) {
+				var answer=document.getElementById("answer");				
+				var s=answer.value;
+				try{
+					console.log(event.key);				
+					var i=parseInt(event.key);
+					if(isNaN(i)) {
+						throw null;
+					}
+					if(s.length>=4) {
+						throw null;
+					}
+				} catch(e) {
+					event.returnValue=false;
+				} // var btn=document.getElementById("ok"); btn.disabled=s.length!=4;
+			}
+			function onEnter() {				
+				var w=0;
+				if(d < 10) {				
+					try{
+						var answer=document.getElementById("answer");				
+						var s=answer.value;
+						if(s.length>4) {
+							throw null;
+						}
+						var a=[];
+						for(var j=0;j<4;j++) {
+							var i=parseInt(s[j]);
+							if(isNaN(i)) {
+								throw null;
+							}
+							a.push(i);
+						}
+						answer.value=null;
+						var bulls=0;
+						var cows=0;
+						var i=0;
+						while(i<4) {
+							if(a[i]==sn[i]) {
+								bulls+=1;
+							} else{
+								var j=0;
+								while(j<4) {
+									if(a[i]==sn[j]) {
+										cows+=1;
+									}
+									j++;
+								}
+							}
+							i++;
+						}
+						print("Versuch "+(d+1)+": "+a.join("")+" Bulls: "+bulls+" Cows: "+cows);	
+						if(bulls==4) {
+							w=1;
+							d=10;
+						}
+					}catch(e) {
+						print("Fehler! Bitte nochmal versuchen!");
+                        return;
+					}
+					d++;
+				}
+				if(d>=10) {
+					if(w==1){
+						print(sn)
+						print("Du hast gewonnen!!!")
+					} else{
+						print(sn)
+						print("Du hast verloren!")
+					}
+					var playHandle=document.getElementById("playHandle");
+                    playHandle.style.visibility="hidden";
+                    var btn=document.createElement("button")
+                    btn.innerHTML="Neues spiel"
+                    btn.onclick=function() {
+                        window.location.reload();
+                    }
+                    document.body.appendChild(btn);
+				}
+			}
+			function print(str) {
+				var el=document.createElement("div");
+				el.innerHTML=str;
+				var playConsole=document.getElementById("playConsole");
+				playConsole.appendChild(el);
+			}
+		</script>
+	</body>
+</html>
